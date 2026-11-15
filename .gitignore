@@ -18,6 +18,6 @@ data/features/*
 mlruns/
 reports/runs/
 reports/compare/
-reports/eda/figures/
+reports/eda/
 submissions/*.csv
 !submissions/.gitkeep
