@@ -1,0 +1,8 @@
+name: catboost_v1
+params:
+  loss_function: MAE
+  iterations: 2000
+  learning_rate: 0.08
+  depth: 8
+  l2_leaf_reg: 3.0
+  early_stopping_rounds: 100

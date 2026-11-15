@@ -1,0 +1,6 @@
+# Variables brutes du challenge (benchmark officiel Random Forest).
+name: raw
+transformers:
+  - name: raw_lags
+  - name: structural
+    params: {encode_gare: ordinal}

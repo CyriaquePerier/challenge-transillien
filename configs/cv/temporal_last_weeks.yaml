@@ -1,0 +1,8 @@
+# Fenêtre glissante : entraînement limité aux 12 dernières semaines avant chaque fold,
+# pour tester l'hypothèse d'une dérive temporelle (données anciennes moins utiles).
+name: temporal_last_weeks
+window: sliding
+n_splits: 4
+val_weeks: 1
+max_train_weeks: 12
+gap_days: 0

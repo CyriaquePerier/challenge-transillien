@@ -1,0 +1,9 @@
+# Jeu de features par défaut : brut + calendrier + statistiques sur les retards passés.
+name: base
+transformers:
+  - name: raw_lags
+  - name: structural
+    params: {encode_gare: ordinal}
+  - name: temporal
+    params: {columns: [jour_semaine, vacances, delta_ferie]}
+  - name: lag_stats

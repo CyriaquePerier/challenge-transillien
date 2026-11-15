@@ -1,0 +1,3 @@
+{
+  "baseline_rf": {"holdout_mae": 0.6837, "tolerance": 0.005}
+}

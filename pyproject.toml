@@ -1,0 +1,80 @@
+[project]
+name = "transilien"
+version = "0.1.0"
+description = "Plateforme d'expérimentation pour le challenge Transilien (prédiction de p0q0)"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "pandas>=2.2",
+    "pyarrow>=15",
+    "numpy>=1.26",
+    "pandera>=0.20",
+    "hydra-core>=1.3",
+    "omegaconf>=2.3",
+    "scikit-learn>=1.4",
+    "lightgbm>=4.3",
+    "xgboost>=2.0",
+    "catboost>=1.2",
+    "optuna>=3.6",
+    "mlflow>=2.12",
+    "plotly>=5.20",
+    "scipy>=1.12",
+    "typer>=0.12",
+    "joblib>=1.3",
+]
+
+[project.optional-dependencies]
+explain = ["shap>=0.45"]
+export = ["kaleido>=1.0"]
+
+[project.scripts]
+transilien = "transilien.cli:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "hypothesis>=6.100",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "pre-commit>=3.7",
+    "pandas-stubs>=2.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/transilien"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "models"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]
+ignore = ["N803", "N806", "N812", "RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.per-file-ignores]
+# Modèles utilisateur : pas d'annotation ClassVar exigée sur default_params.
+"models/*.py" = ["RUF012"]
+# Feuille de style embarquée.
+"src/transilien/reporting/html.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src/transilien"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+check_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+addopts = "-ra -m 'not regression'"
+markers = [
+    "regression: test de non-régression sur les données complètes (lent)",
+    "integration: pipeline complet sur un sous-échantillon",
+]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::FutureWarning"]

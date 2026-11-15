@@ -1,0 +1,59 @@
+# Configuration par défaut de la plateforme. Toute valeur est surchargeable en CLI :
+#   uv run transilien run model=lightgbm_v1 model.params.num_leaves=63 cv.n_splits=3
+defaults:
+  - cv: temporal_expanding
+  - features: base
+  - model: baseline_rf
+  - _self_
+
+seed: 42
+
+paths:
+  root: .                       # racine du dépôt (résolue automatiquement)
+  data_lake: data-lake
+  interim: data/interim
+  features_cache: data/features
+  reports: reports
+  runs: reports/runs
+  submissions: submissions
+  mlruns: mlruns
+  model_configs: configs/model
+
+data:
+  files:
+    x_train: x_train_final.csv
+    y_train: y_train_final_j5KGWWK.csv
+    x_test: x_test_final.csv
+    y_sample: y_sample_final.csv
+  # Sous-échantillonnage (fraction de lignes par date) pour les tests et le prototypage.
+  sample_frac: null
+
+holdout:
+  weeks: 4                      # dernières semaines du train mises de côté
+
+postprocess:
+  candidates: [raw, round, clip, clip_round]
+  clip_quantiles: [0.001, 0.999]
+
+evaluation:
+  delay_classes: [1, 5]         # classes |y| <= 1, 2-5, > 5
+  permutation_sample: 20000     # lignes du hold-out pour la permutation importance
+  shap_sample: 2000
+
+reference:
+  baseline_zero_mae: 0.894      # prédire 0 partout
+
+reporting:
+  export_png: true             # PNG des figures (extra "export" / kaleido)
+
+tuning:
+  n_startup_trials: 5          # essais avant activation du pruning
+
+tracking:
+  enabled: true
+  experiment: transilien
+  max_artifact_mb: 50           # fichiers plus gros (ex. forêts) laissés dans reports/runs/
+
+submission:
+  enabled: true
+  max_abs_value: 200            # plage plausible des prédictions

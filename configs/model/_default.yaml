@@ -1,0 +1,4 @@
+# Configuration utilisée quand configs/model/<nom>.yaml n'existe pas :
+# les paramètres par défaut de la classe (attribut default_params) s'appliquent.
+name: ???
+params: {}

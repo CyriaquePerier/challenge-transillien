@@ -1,0 +1,8 @@
+# Validation croisée temporelle à fenêtre croissante : on entraîne sur les semaines 1..n
+# et on valide sur la semaine n+1 (folds groupés par date).
+name: temporal_expanding
+window: expanding
+n_splits: 5
+val_weeks: 1
+max_train_weeks: null
+gap_days: 0

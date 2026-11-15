@@ -1,0 +1,14 @@
+# Jeu enrichi : base + encodages cibles calculés dans chaque fold (anti-fuite).
+name: lags_enrichis
+transformers:
+  - name: raw_lags
+  - name: structural
+    params: {encode_gare: ordinal}
+  - name: temporal
+    params: {columns: [jour_semaine, vacances, delta_ferie]}
+  - name: lag_stats
+  - name: target_encoding
+    params:
+      keys: [[gare], [gare, arret], [gare, jour_semaine]]
+      stats: [mean, median]
+      smoothing: 50
