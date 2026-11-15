@@ -1,0 +1,23 @@
+# Environnement
+.venv
+.venv/
+.venv.nosync/
+__pycache__/
+*.pyc
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+.DS_Store
+
+# Artefacts régénérables
+data/interim/*
+data/features/*
+!data/interim/.gitkeep
+!data/features/.gitkeep
+mlruns/
+reports/runs/
+reports/compare/
+reports/eda/figures/
+submissions/*.csv
+!submissions/.gitkeep

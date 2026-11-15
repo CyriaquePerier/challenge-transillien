@@ -1,0 +1,9 @@
+.venv
+.venv.nosync
+.git
+data/interim
+data/features
+mlruns
+reports
+submissions
+**/__pycache__
