@@ -13,16 +13,19 @@ help:  ## Affiche cette aide
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
 
 setup:  ## Installe l'environnement (uv) et les hooks pre-commit
+	@$(MAKE) --no-print-directory venv-nosync
 	uv sync --all-extras
-	@$(MAKE) --no-print-directory venv-nosync fix-pth
+	@$(MAKE) --no-print-directory fix-pth
 	$(UV) pre-commit install
 
 # macOS + iCloud Drive (Documents/Bureau synchronisés) : iCloud cache et évince les fichiers
-# de .venv. Un dossier suffixé .nosync est ignoré par iCloud ; .venv devient un lien vers lui.
+# de .venv, ce qui casse les imports. L'environnement est donc créé directement dans
+# .venv.nosync (ignoré par iCloud) et .venv devient un lien symbolique vers lui.
 venv-nosync:
-	@if [ "$$(uname)" = "Darwin" ] && [ -d .venv ] && [ ! -L .venv ]; then \
-		rm -rf .venv.nosync && mv .venv .venv.nosync && ln -s .venv.nosync .venv && \
-		chflags -R nohidden .venv.nosync && echo ".venv déplacé vers .venv.nosync (hors iCloud)"; \
+	@if [ "$$(uname)" = "Darwin" ] && [ ! -L .venv ]; then \
+		rm -rf .venv .venv.nosync && \
+		UV_PROJECT_ENVIRONMENT=.venv.nosync uv sync --all-extras -q && \
+		ln -s .venv.nosync .venv && echo "Environnement créé dans .venv.nosync (hors iCloud)"; \
 	fi
 
 # Synchronise l'environnement puis, sous macOS, retire le drapeau « hidden » que reçoit
