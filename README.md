@@ -129,6 +129,23 @@ prédictions OOF. Le fichier est nommé `submissions/<date>_<modèle>_cv<mae>.cs
 
 ---
 
+## Résultats de référence
+
+Runs sur les données complètes (CV temporelle à 5 folds, hold-out sur les 4 dernières
+semaines, graine 42) :
+
+| Modèle | Features | MAE CV | MAE hold-out | Post-traitement | Gain hold-out vs « prédire 0 » |
+|---|---|---|---|---|---|
+| `baseline_zero` | `raw` | 0,936 ± 0,089 | 0,871 | aucun | — |
+| `baseline_rf` (benchmark officiel) | `raw` | 0,731 ± 0,081 | 0,684 | arrondi + écrêtage | −21 % |
+| `lightgbm_v1` | `lags_enrichis` | 0,674 ± 0,072 | **0,638** | arrondi | −27 % |
+
+L'écart entre LightGBM et la RF sur le hold-out (−0,046) est significatif : test de
+Wilcoxon apparié p < 10⁻⁴, IC bootstrap à 95 % [0,043 ; 0,049]. L'arrondi apporte à lui
+seul environ 0,05 de MAE à la RF.
+
+---
+
 ## Ajouter un modèle
 
 1. Copier `models/baseline_rf.py` en `models/mon_modele.py`.
@@ -304,8 +321,9 @@ permet de relancer la plateforme sur une autre machine.
 * **Dépôt dans un dossier iCloud Drive (`Documents`, `Bureau`) sous macOS** : iCloud
   marque les fichiers de `.venv` comme cachés, voire les évince du disque, et Python ≥ 3.12
   ignore les `.pth` cachés, d'où `ModuleNotFoundError: No module named 'transilien'`.
-  `make setup` déplace donc l'environnement dans `.venv.nosync` (iCloud ignore les
-  dossiers suffixés `.nosync`) et le remplace par un lien symbolique `.venv`. Chaque
+  `make setup` crée donc l'environnement directement dans `.venv.nosync` (iCloud
+  ignore les dossiers suffixés `.nosync`) et `.venv` devient un lien symbolique vers lui.
+  Si un `.venv` « classique » existe déjà, il est recréé : ses fichiers ont pu être évincés. Chaque
   cible du Makefile retire aussi le drapeau par précaution (`make fix-pth`).
 * **« Export PNG ignoré »** : l'export PNG des figures (Kaleido ≥ 1) a besoin de Chrome.
   Pour l'installer : `uv run plotly_get_chrome`. Pour désactiver l'export :
